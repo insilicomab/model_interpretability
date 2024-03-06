@@ -1,3 +1,4 @@
+import torch
 from torchvision import transforms
 
 
@@ -45,13 +46,13 @@ class Transforms:
             ),
         }
 
-    def __call__(self, phase, img):
+    def __call__(self, phase, img) -> torch.Tensor:
         """
         Apply the specified transformation to the input image based on the given phase.
 
         Args:
             phase (str): The phase for which the transformation should be applied (e.g., "input", "original").
-            img (PIL.Image): The input image to be transformed.
+            img (PIL.Image.Image): The input image to be transformed.
 
         Returns:
             torch.Tensor: The transformed image as a PyTorch tensor.

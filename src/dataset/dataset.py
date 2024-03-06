@@ -2,7 +2,7 @@ import os
 
 import torch
 from PIL import Image
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import Dataset
 from torchvision.transforms import Compose
 
 

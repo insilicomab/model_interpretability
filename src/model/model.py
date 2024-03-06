@@ -21,8 +21,10 @@ class TimmNet(nn.Module):
         return self.net(x)
 
 
-def get_model(config: DictConfig):
-    _model_state_dict = torch.load(config.model_path, map_location=torch.device('cpu'))["state_dict"]
+def get_model(config: DictConfig) -> torch.nn.Module:
+    _model_state_dict = torch.load(config.model_path, map_location=torch.device("cpu"))[
+        "state_dict"
+    ]
     model_state_dict = {
         k.replace("model.", ""): v for k, v in _model_state_dict.items()
     }
