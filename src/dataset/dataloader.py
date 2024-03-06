@@ -1,25 +1,17 @@
 import numpy as np
-import torchvision
-from PIL import Image
-from torchvision import transforms
+from torch.utils.data import DataLoader
+
+from dataset.dataset import ImageDataset
+from dataset.transformation import Transforms
 
 
-# class to load input images and processed original images
-class ImageLoader:
+def get_image_dataloader(config) -> DataLoader:
+    # dataset
+    image_dataset = ImageDataset(
+        root=config.root, transform=Transforms(image_size=config.image_size)
+    )
 
-    def __init__(self, img_dir: str, transform=None):
-        self.img_dir = img_dir
-        self.transform = transform
+    # dataloader
+    dataloader = DataLoader(image_dataset, batch_size=1, shuffle=False)
 
-    def process_images(self):
-
-        # read an image file
-        img = Image.open(self.img_dir).convert("RGB")
-
-        # process input image
-        input_img = self.transform("input", img).unsqueeze(0)
-
-        # process original image
-        original_img = np.array(self.transform("original", img))
-
-        return input_img, original_img
+    return dataloader

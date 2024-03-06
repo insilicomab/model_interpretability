@@ -40,6 +40,7 @@ class Transforms:
             "original": transforms.Compose(
                 [
                     transforms.CenterCrop([self.image_size, self.image_size]),
+                    transforms.ToTensor(),
                 ]
             ),
         }
