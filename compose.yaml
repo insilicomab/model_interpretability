@@ -1,0 +1,8 @@
+services:
+  model_interpretability:
+    build: .
+    volumes:
+      - ./config:/opt/config
+      - ./inputs:/opt/inputs
+      - ./src:/opt/src
+      - ./outputs:/opt/outputs
