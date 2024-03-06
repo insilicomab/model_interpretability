@@ -12,15 +12,15 @@ hydra:
     subdir: .
 
 ## User Setting ##
-input_img_dir: input/PNEUMONIA/person1946_bacteria_4874.jpeg
-output_img_dir: output/image/single.png
-output_multi_img_dir: output/image/multi.png
-model_dir: models/convnext_base.pth
-target: 1
+root: inputs/images/sample/スギ/Sugi_test
+model_path: inputs/models/convnext_small.in12k_ft_in1k_384-augmix-mixup.ckpt
+label_map_path: inputs/json/label_map.json
+output_dir: outputs
+target: 4
 
 ## Model ##
-model_name: convnext_base
-num_classes: 2
+model_name: convnext_small.in12k_ft_in1k_384
+num_classes: 5
 
 ## Transform ##
 image_size: 224
@@ -30,7 +30,7 @@ image_size: 224
 vis_img:
   enable: True
   method: blended_heat_map
-  sign: all
+  sign: positive
   plt_fig_axis:
   outlier_perc: 2
   cmap:
@@ -44,7 +44,7 @@ vis_img:
 vis_img_multi:
   enable: True
   methods: ["heat_map", "original_image"]
-  signs: ["all", "all"]
+  signs: ["positive", "all"]
   outlier_perc: 2
   cmap:
   alpha_overlay:
@@ -54,12 +54,8 @@ vis_img_multi:
   use_pyplot: True
 
 ## Algorithm ##
-
-# Guided Grad-CAM
-# https://captum.ai/api/guided_grad_cam.html#captum.attr.GuidedGradCam
-# !!! When using Guided Grad-CAM, you must specify a layer (line 27 in guided_gc.py).
-ggc:
-  device_ids:
+# Saliency
+# https://captum.ai/api/saliency.html#captum.attr.Saliency
+saliency:
+  abs: False
   additional_forward_args:
-  interpolate_mode: nearest
-  attribute_to_layer_input: False

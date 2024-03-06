@@ -41,7 +41,6 @@ def main(cfg: DictConfig):
                 additional_forward_args=cfg.saliency.additional_forward_args,
             )
             attribution_img = attribution[0].cpu().permute(1, 2, 0).detach().numpy()
-
             # save a figure
             if cfg.vis_img.enable:
                 figure, _ = viz.visualize_image_attr(
