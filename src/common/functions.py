@@ -43,8 +43,8 @@ def visualize(
             alpha_overlay=config.vis_img_multi.alpha_overlay,
             show_colorbar=config.vis_img_multi.show_colorbar,
             titles=[
-                "original",
                 f"{attribution_name} for {target_class}: {file_path}",
+                "original",
             ],
             fig_size=config.vis_img_multi.fig_size,
             use_pyplot=config.vis_img_multi.use_pyplot,

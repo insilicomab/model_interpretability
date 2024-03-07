@@ -47,7 +47,7 @@ class GradcamAttribution(BaseAttribution):
             attribute_to_layer_input=attribute_to_layer_input,
             relu_attributions=relu_attributions,
         )
-        attribution_img = attribution[0].cpu().permute(1, 2, 0).detach().numpy()
+        attribution_img = attribution.squeeze(0).cpu().permute(1, 2, 0).detach().numpy()
         return attribution_img
 
 
