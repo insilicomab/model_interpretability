@@ -36,7 +36,6 @@ vis_img:
   cmap:
   alpha_overlay: 0.5
   show_colorbar: False
-  title:
   fig_size: [6, 6]
   use_pyplot: True
 
@@ -49,11 +48,20 @@ vis_img_multi:
   cmap:
   alpha_overlay:
   show_colorbar: True
-  titles:
   fig_size: [6, 6]
   use_pyplot: True
 
 ## Algorithm ##
+
+# Guided Grad-CAM
+# https://captum.ai/api/guided_grad_cam.html#captum.attr.GuidedGradCam
+# !!! When using Guided Grad-CAM, you must specify a layer (line 27 in guided_gc.py).
+ggc:
+  device_ids:
+  additional_forward_args:
+  interpolate_mode: nearest
+  attribute_to_layer_input: False
+
 # Saliency
 # https://captum.ai/api/saliency.html#captum.attr.Saliency
 saliency:

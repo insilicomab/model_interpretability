@@ -3,7 +3,10 @@ import json
 import hydra
 import torch
 from omegaconf import DictConfig
+from tqdm import tqdm
 
+from attribution import GuidedGradcamAttribution
+from common.functions import visualize
 from dataset import get_image_dataloader
 from model import get_model
 
@@ -20,14 +23,36 @@ def main(cfg: DictConfig):
     # load model
     model = get_model(cfg)
 
+    # layer <=== only layer needs to be defined here !!!
+    layer = model.net.stages[3].blocks[2].drop_path
+
     # get dataloader
     dataloader = get_image_dataloader(cfg)
 
-    data_iter = iter(dataloader)
-    a, b, c = next(data_iter)
-    print(f"input: {type(a)}")
-    print(f"original: {type(b)}")
-    print(f"file_path: {c}")
+    # calculate attribution by Guided Grad-CAM
+    guided_gradcam_attr = GuidedGradcamAttribution(model, layer)
+
+    with torch.no_grad():
+        for input_img, original_img, file_path in tqdm(dataloader):
+            input_img.requires_grad = True
+
+            attribution_img = guided_gradcam_attr.attribute(
+                inputs=input_img,
+                target=cfg.target,
+                additional_forward_args=cfg.ggc.additional_forward_args,
+                interpolate_mode=cfg.ggc.interpolate_mode,
+                attribute_to_layer_input=cfg.ggc.attribute_to_layer_input,
+            )
+
+            # save a figure
+            visualize(
+                cfg,
+                attribution_img,
+                original_img,
+                attribution_name="Guided_GradCAM",
+                target_class=int_to_label[cfg.target],
+                file_path=file_path[0],
+            )
 
 
 if __name__ == "__main__":
