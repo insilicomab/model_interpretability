@@ -62,6 +62,12 @@ ggc:
   interpolate_mode: nearest
   attribute_to_layer_input: False
 
+gradcam:
+  device_ids:
+  additional_forward_args:
+  attribute_to_layer_input: False
+  relu_attributions: True
+
 # Saliency
 # https://captum.ai/api/saliency.html#captum.attr.Saliency
 saliency:

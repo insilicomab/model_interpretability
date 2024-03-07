@@ -19,6 +19,37 @@ class BaseAttribution(ABC):
         pass
 
 
+class GradcamAttribution(BaseAttribution):
+    def __init__(
+        self, model: nn.Module, layer: nn.Module, device_ids: int = None
+    ) -> None:
+        super().__init__(model)
+        self.__layer = layer
+        self.__gradcam = captum.attr.LayerGradCam(self._model, self.__layer, device_ids)
+
+    @property
+    def layer(self):
+        return self.__layer
+
+    def attribute(
+        self,
+        inputs: torch.Tensor,
+        target: int,
+        additional_forward_args: Any = None,
+        attribute_to_layer_input: bool = False,
+        relu_attributions: bool = False,
+    ):
+        attribution = self.__gradcam.attribute(
+            inputs=inputs,
+            target=target,
+            additional_forward_args=additional_forward_args,
+            attribute_to_layer_input=attribute_to_layer_input,
+            relu_attributions=relu_attributions,
+        )
+        attribution_img = attribution[0].cpu().permute(1, 2, 0).detach().numpy()
+        return attribution_img
+
+
 class GuidedGradcamAttribution(BaseAttribution):
     def __init__(
         self, model: nn.Module, layer: nn.Module, device_ids: int = None
