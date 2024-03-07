@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 import captum
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -79,7 +80,9 @@ class GuidedGradcamAttribution(BaseAttribution):
             interpolate_mode=interpolate_mode,
             attribute_to_layer_input=attribute_to_layer_input,
         )
-        attribution_img = attribution[0].cpu().permute(1, 2, 0).detach().numpy()
+        attribution_img = np.transpose(
+            attribution.squeeze().cpu().detach().numpy(), (1, 2, 0)
+        )
         return attribution_img
 
 
@@ -101,5 +104,7 @@ class SaliencyAttribution(BaseAttribution):
             abs=abs,
             additional_forward_args=additional_forward_args,
         )
-        attribution_img = attribution[0].cpu().permute(1, 2, 0).detach().numpy()
+        attribution_img = np.transpose(
+            attribution.squeeze().cpu().detach().numpy(), (1, 2, 0)
+        )
         return attribution_img
