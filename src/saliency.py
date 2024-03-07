@@ -9,6 +9,7 @@ from captum.attr import visualization as viz
 from omegaconf import DictConfig
 from tqdm import tqdm
 
+from attribution import SaliencyAttribution
 from dataset import get_image_dataloader
 from model import get_model
 
@@ -29,18 +30,17 @@ def main(cfg: DictConfig):
     dataloader = get_image_dataloader(cfg)
 
     # calculate attribution by Saliency
-    saliency = captum.attr.Saliency(model)
+    saliency_attr = SaliencyAttribution(model, int_to_label)
 
     with torch.no_grad():
         for input_img, original_img, file_path in tqdm(dataloader):
             input_img.requires_grad = True
-            attribution = saliency.attribute(
+            attribution_img, target_class, attribution_name = saliency_attr.attribute(
                 inputs=input_img,
                 target=cfg.target,
                 abs=cfg.saliency.abs,
                 additional_forward_args=cfg.saliency.additional_forward_args,
             )
-            attribution_img = attribution[0].cpu().permute(1, 2, 0).detach().numpy()
             # save a figure
             if cfg.vis_img.enable:
                 figure, _ = viz.visualize_image_attr(
@@ -55,7 +55,7 @@ def main(cfg: DictConfig):
                     cmap=cfg.vis_img.cmap,
                     alpha_overlay=cfg.vis_img.alpha_overlay,
                     show_colorbar=cfg.vis_img.show_colorbar,
-                    title=cfg.vis_img.title,
+                    title=f"{attribution_name} for {target_class}: {file_path[0]}",
                     fig_size=cfg.vis_img.fig_size,
                     use_pyplot=cfg.vis_img.use_pyplot,
                 )
@@ -74,7 +74,10 @@ def main(cfg: DictConfig):
                     cmap=cfg.vis_img_multi.cmap,
                     alpha_overlay=cfg.vis_img_multi.alpha_overlay,
                     show_colorbar=cfg.vis_img_multi.show_colorbar,
-                    titles=cfg.vis_img_multi.titles,
+                    titles=[
+                        "original",
+                        f"{attribution_name} for {target_class}: {file_path[0]}",
+                    ],
                     fig_size=cfg.vis_img_multi.fig_size,
                     use_pyplot=cfg.vis_img_multi.use_pyplot,
                 )
