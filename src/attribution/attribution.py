@@ -7,17 +7,12 @@ import torch.nn as nn
 
 
 class BaseAttribution(ABC):
-    def __init__(self, model: nn.Module, int_to_label: dict) -> None:
+    def __init__(self, model: nn.Module) -> None:
         self._model = model
-        self._int_to_label = int_to_label
 
     @property
     def model(self):
         return self._model
-
-    @property
-    def int_to_label(self):
-        return self._int_to_label
 
     @abstractmethod
     def attribute(self):
@@ -25,10 +20,9 @@ class BaseAttribution(ABC):
 
 
 class SaliencyAttribution(BaseAttribution):
-    def __init__(self, model: nn.Module, int_to_label: dict) -> None:
-        super().__init__(model, int_to_label)
+    def __init__(self, model: nn.Module) -> None:
+        super().__init__(model)
         self.__saliency = captum.attr.Saliency(self._model)
-        self.__attribution_name = "Saliency"
 
     def attribute(
         self,
@@ -44,5 +38,4 @@ class SaliencyAttribution(BaseAttribution):
             additional_forward_args=additional_forward_args,
         )
         attribution_img = attribution[0].cpu().permute(1, 2, 0).detach().numpy()
-        target_class = self._int_to_label[target]
-        return attribution_img, target_class, self.__attribution_name
+        return attribution_img

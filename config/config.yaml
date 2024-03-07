@@ -16,7 +16,7 @@ root: inputs/images/sample/スギ/Sugi_test
 model_path: inputs/models/convnext_small.in12k_ft_in1k_384-augmix-mixup.ckpt
 label_map_path: inputs/json/label_map.json
 output_dir: outputs
-target: 4
+target: 2
 
 ## Model ##
 model_name: convnext_small.in12k_ft_in1k_384
