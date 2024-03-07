@@ -24,7 +24,7 @@ def main(cfg: DictConfig):
     model = get_model(cfg)
 
     # layer <=== only layer needs to be defined here !!!
-    layer = model.net.stages[3].blocks[2].drop_path
+    layer = model.net.norm_pre
 
     # get dataloader
     dataloader = get_image_dataloader(cfg)
