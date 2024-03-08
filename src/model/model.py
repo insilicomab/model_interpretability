@@ -30,4 +30,4 @@ def get_model(config: DictConfig) -> torch.nn.Module:
     }
     model = TimmNet(config)
     model.load_state_dict(model_state_dict, strict=True)
-    return model.eval()
+    return model.net.eval()
