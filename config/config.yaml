@@ -55,13 +55,16 @@ vis_img_multi:
 
 # Guided Grad-CAM
 # https://captum.ai/api/guided_grad_cam.html#captum.attr.GuidedGradCam
-# !!! When using Guided Grad-CAM, you must specify a layer (line 27 in guided_gc.py).
+# !!! When using Guided Grad-CAM, you must specify a layer (line 27 in src/guided_gradcam.py).
 ggc:
   device_ids:
   additional_forward_args:
   interpolate_mode: nearest
   attribute_to_layer_input: False
 
+# Grad-CAM
+# https://captum.ai/api/layer.html#captum.attr.LayerGradCam
+# !!! When using Grad-CAM, you must specify a layer (line 27 in src/gradcam.py).
 gradcam:
   device_ids:
   additional_forward_args:
