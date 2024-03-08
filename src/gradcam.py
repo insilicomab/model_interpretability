@@ -34,8 +34,6 @@ def main(cfg: DictConfig):
 
     with torch.no_grad():
         for input_img, original_img, file_path in tqdm(dataloader):
-            input_img.requires_grad = True
-
             attribution_img = gradcam_attr.attribute(
                 inputs=input_img,
                 target=cfg.target,
